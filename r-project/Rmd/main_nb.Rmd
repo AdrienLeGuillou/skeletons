@@ -1,0 +1,38 @@
+---
+title: "Template"
+output: 
+  html_document: 
+    code_folding: hide
+    toc: true
+    toc_float: true
+    number_sections: true
+    smart: false
+---
+
+```{r setup, include=FALSE}
+opts_chunk$set(echo = TRUE)
+options(knitr.kable.NA = "")
+# load required drake objects (to make them dependencies)
+loadd(df_main) 
+```
+
+# Variables correlation (spearman)
+
+```{r fig.width=10, fig.height=10}
+cor_mat <- cor(make_one_hot_df(df_main), method = "spearman")
+ggcorrplot::ggcorrplot(cor_mat, type = "upper") %>%
+  plotly::ggplotly(dynamicTicks = F)
+```
+
+
+# Explaination of variables
+
+```{r results='asis', warning=FALSE}
+exp_cols <- c(
+  # insert col names in quotes
+)
+invisible(lapply(
+  syms(exp_cols),
+  explain_rmd,
+  df = df_main
+)) 
